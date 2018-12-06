@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script
+            src="https://code.jquery.com/jquery-3.2.0.min.js"
+            integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I="
+            crossorigin="anonymous">
+    </script>
+    <script
+            src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+            integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
+            crossorigin="anonymous">
+    </script>
+</head>
+<body>
+<script type="text/javascript">
+    $(document).on("click", "#btn", function () {
+
+        jQuery('<div></div>').dialog({
+            modal: true,
+            title: "Confirmation",
+            open: function () {
+                var markup = 'Hello World';
+                $(this).html(markup);
+            },
+            buttons: {
+                Ok: function () {
+                    $(this).dialog("close");
+                }
+            }
+        }); //end confirm dialog
+
+    });
+
+    $.post('./index.php',function (data) {
+        console.log(makeFolderTree(data))
+    });
+
+    function makeFolderTree(data) {
+        // var _ = require('lodash'); // `$ npm install lodash --save`
+
+        function createJSON(arrData) {
+            var result = {};
+            arrData.each(function(str) {
+                var _result = result;
+                str.split('/').forEach(name => {
+                    if (typeof _result[name] === 'undefined') {
+                        _result[name] = {
+                            data: {
+                                path: str,
+                                text: name
+                            },
+                            children: {}
+                        };
+                    }
+                    _result = _result[name]['children'];
+                });
+            });
+
+            return result;
+        }
+
+        function recursive(obj) {
+            let tree = [];
+            for(var key in obj) {
+                tree.push(_.extend(obj[key]['data'], {
+                    children: recursive(obj[key]['children'])
+                }));
+            }
+            return tree;
+        }
+
+        return recursive(createJSON(data));
+    }
+</script>
+<input id="btn" type="button" value="Click Me" />
+</body>
+</html>
