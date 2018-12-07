@@ -19,6 +19,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 </head>
 <body>
+<h1>AJAX demo</h1>
+<div id="ajax" class="demo"></div>
 <script type="text/javascript">
     $(document).on("click", "#btn", function () {
 
@@ -38,12 +40,19 @@
 
     });
 
-    $.post('./index.php',function (data) {
+    $.post('./index2.php',function (data) {
         // data.append('body')
-        $('body').append(data)
+       console.log(data)
     });
 
-    $(function () { $('#jsTree').jstree(); });
+    $('#ajax').jstree({
+        'core' : {
+            'data' : {
+                "url" : "./index2.php",
+                "dataType" : "json" // needed only if you do not supply JSON headers
+            }
+        }
+    });
 
 
 </script>
