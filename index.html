@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+
     <script
             src="https://code.jquery.com/jquery-3.2.0.min.js"
             integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I="
@@ -14,6 +16,7 @@
             integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
             crossorigin="anonymous">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -36,45 +39,13 @@
     });
 
     $.post('./index.php',function (data) {
-        console.log(makeFolderTree(data))
+        // data.append('body')
+        $('body').append(data)
     });
 
-    function makeFolderTree(data) {
-        // var _ = require('lodash'); // `$ npm install lodash --save`
+    $(function () { $('#jsTree').jstree(); });
 
-        function createJSON(arrData) {
-            var result = {};
-            arrData.each(function(str) {
-                var _result = result;
-                str.split('/').forEach(name => {
-                    if (typeof _result[name] === 'undefined') {
-                        _result[name] = {
-                            data: {
-                                path: str,
-                                text: name
-                            },
-                            children: {}
-                        };
-                    }
-                    _result = _result[name]['children'];
-                });
-            });
 
-            return result;
-        }
-
-        function recursive(obj) {
-            let tree = [];
-            for(var key in obj) {
-                tree.push(_.extend(obj[key]['data'], {
-                    children: recursive(obj[key]['children'])
-                }));
-            }
-            return tree;
-        }
-
-        return recursive(createJSON(data));
-    }
 </script>
 <input id="btn" type="button" value="Click Me" />
 </body>
